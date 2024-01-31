@@ -1,9 +1,16 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const UserModel = require('../models/user')
 
 const createUser = async (req, res) => {
   try {
     const { phone_number, priority, password } = req.body;
+
+    const dup_users = await UserModel.find({phone_number})
+
+    if(!dup_users){
+      return res.json({error: "user with provided phone number already exists"})
+    }
     
     const user = new User({
       phone_number,

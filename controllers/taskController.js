@@ -22,6 +22,45 @@ const calculatePriority = (dueDate) => {
     }
   };
 
+  const updateTaskStatus = async (task_id) => {
+    try {
+      // Find all subtasks associated with the task
+      const subtasks = await SubTask.find({ task_id });
+      // console.log(subtasks)
+  
+      // Update the task status based on subtask completion
+      if (subtasks.length === 0) {
+        // If no subtasks are present, set status to "TODO"
+        await Task.updateOne({ _id: task_id }, { $set: { status: "TODO" } });
+      } else {
+        // Check if at least one subtask is finished
+        const isAnySubTaskFinished = subtasks.some(subtask => subtask.status === 1);
+
+        console.log(isAnySubTaskFinished)
+  
+        if (isAnySubTaskFinished) {
+          await Task.updateOne({ _id: task_id }, { $set: { status: "IN_PROGRESS" } });
+        } 
+        // else {
+        //   // If no subtask is finished, set status to "TODO"
+        //   await Task.updateOne({ _id: task_id }, { $set: { status: "TODO" } });
+        // }
+  
+        // Check if every subtask is completed
+        const isEverySubTaskCompleted = subtasks.every(subtask => subtask.status === 1);
+  
+        if (isEverySubTaskCompleted) {
+          await Task.updateOne({ _id: task_id }, { $set: { status: "DONE" } });
+        }
+      }
+  
+      console.log('Task status updated successfully');
+    } catch (error) {
+      console.error('Error updating task status:', error);
+    }
+  };
+  
+
 const createTask = async (req, res) => {
   try {
     const { title, description } = req.body;
@@ -90,6 +129,9 @@ const createSubTask = async (req, res) => {
     });
 
     await subTask.save();
+
+    await updateTaskStatus(task_id, user_id);
+
     res.status(201).json(subTask);
   } catch (error) {
     console.error(error);
@@ -111,7 +153,7 @@ const getAllUserTasks = async (req, res) => {
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
-    const tasks = await Task.find({ user_id: user_id })
+    const tasks = await Task.find({ user_id: user_id, is_deleted:false })
       // .populate("subTasks")
       // .populate("user_id");
     res.json(tasks);
@@ -146,7 +188,7 @@ const getAllUserSubTasks = async (req, res) => {
     }
 
     // Check if the task_id exists and is associated with the user
-    const subTasks = await SubTask.find({ task_id});
+    const subTasks = await SubTask.find({ task_id, is_deleted:false});
 
     if (!subTasks) {
       return res.status(404).json({ error: 'Subtasks not found' });
@@ -160,9 +202,50 @@ const getAllUserSubTasks = async (req, res) => {
 };
 
 
-// const updateTask = async (req, res) => {
-//   // Implementation logic for updating a task
-// };
+const updateTask = async (req, res) => {
+  try {
+    const { task_id } = req.params;
+    const { due_date } = req.body;
+
+    // Fetch JWT token from the request cookies
+    const token = req.cookies.jwt;
+
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized - Token not provided - Login first' });
+    }
+
+    // Verify the token to get user information
+    const decodedToken = jwt.verify(token, 'your-secret-key');
+
+    // Extract the _id from the decoded token
+    const user_id = decodedToken._id;
+
+    // Check if the task_id exists and is associated with the user
+    const task = await Task.findOne({ _id: task_id, user_id });
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found or unauthorized access' });
+    }
+
+    if(task.is_deleted === true){
+      return res.status(404).json({ error: 'Task was deleted' });
+    }
+
+    // Update the due_date of the task
+    task.due_date = due_date;
+
+    // Update task status based on subtask completion
+    // await updateTaskStatus(task_id, user_id);
+
+    // Save the updated task
+    await task.save();
+
+    res.status(200).json({ message: 'Task updated successfully', task });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 const updateSubTask = async (req, res) => {
   try {
@@ -198,14 +281,20 @@ const updateSubTask = async (req, res) => {
     }
 
     // Update the status of the subtask (allowed values: 0, 1)
+    if(subTask.is_deleted === true){
+      return res.status(404).json({ error: 'Subtask was deleted' });
+    }
+
     subTask.status = status;
     await subTask.save();
+    await updateTaskStatus(subTask.task_id, user_id);
 
     res.status(200).json({ message: 'Subtask status updated successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+
 };
 
 
@@ -234,6 +323,10 @@ const deleteTask = async (req, res) => {
     }
 
     // Perform soft deletion by setting is_deleted to true
+    if(task.is_deleted === true){
+      return res.status(404).json({ error: 'Task is already deleted' });
+    }
+
     task.is_deleted = true;
     await task.save();
 
@@ -279,6 +372,10 @@ const deleteSubTask = async (req, res) => {
       return res.status(404).json({ error: 'unauthorized access' });
     }
 
+    if(subTask.is_deleted === true){
+      return res.status(404).json({ error: 'Subtask is already deleted' });
+    }
+
     // Perform soft deletion by setting is_deleted to true
     subTask.is_deleted = true;
     
@@ -297,7 +394,7 @@ module.exports = {
   createSubTask,
   getAllUserTasks,
   getAllUserSubTasks,
-  // updateTask,
+  updateTask,
   updateSubTask,
   deleteTask,
   deleteSubTask,

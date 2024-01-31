@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser")
 const taskController = require('./controllers/taskController')
 const userController = require('./controllers/userController')
 const cronJobs = require('./helpers/cronJobs');
+const cronJobVoiceCall = require('./helpers/voiceCall')
 const app = express();
 
 app.listen(5000)
@@ -23,7 +24,7 @@ app.post('/api/tasks',taskController.createTask);
 app.post('/api/subtasks', taskController.createSubTask);
 app.get('/api/tasks', taskController.getAllUserTasks);
 app.get('/api/subtasks', taskController.getAllUserSubTasks);
-// app.put('/api/tasks/:taskId', authMiddleWare.authenticateToken, taskController.updateTask);
+app.put('/api/tasks/:task_id', taskController.updateTask);
 app.put('/api/subtasks/:subtask_id', taskController.updateSubTask);
 app.post('/api/tasks/:task_id', taskController.deleteTask);
 app.post('/api/subtasks/:subtask_id', taskController.deleteSubTask);
