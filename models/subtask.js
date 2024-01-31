@@ -6,6 +6,10 @@ const subTaskSchema = new mongoose.Schema({
   created_at: { type: Date, default: Date.now },
   updated_at: Date,
   deleted_at: Date,
+  is_deleted:{
+    type:Boolean,
+    default:false
+  }
 });
 
 const SubTask = mongoose.model('SubTask', subTaskSchema);
