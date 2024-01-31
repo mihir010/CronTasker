@@ -29,7 +29,7 @@ const initiateVoiceCalls = async () => {
     // Find tasks that are not soft-deleted and have passed their due_date
     const overdueTasks = await Task.find({
       is_deleted: false,
-      due_date: { $gt: new Date() },
+      due_date: { $lt: new Date() },
       status: { $ne: "DONE" }, // Only consider tasks that are not completed
     }).sort({ priority: 1 }); // Sort tasks based on priority ascending
 
@@ -68,7 +68,7 @@ const initiateVoiceCalls = async () => {
 };
 
 cron.schedule(
-  "55 15 * * *",
+  "0 0 * * *",
   () => {
     initiateVoiceCalls();
   },

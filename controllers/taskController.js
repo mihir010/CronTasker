@@ -285,6 +285,8 @@ const updateSubTask = async (req, res) => {
       return res.status(404).json({ error: 'Subtask was deleted' });
     }
 
+    subTask.updated_at = new Date()
+
     subTask.status = status;
     await subTask.save();
     await updateTaskStatus(subTask.task_id, user_id);
@@ -375,6 +377,8 @@ const deleteSubTask = async (req, res) => {
     if(subTask.is_deleted === true){
       return res.status(404).json({ error: 'Subtask is already deleted' });
     }
+
+    subTask.deleted_at = new Date()
 
     // Perform soft deletion by setting is_deleted to true
     subTask.is_deleted = true;
