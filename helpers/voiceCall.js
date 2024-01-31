@@ -1,7 +1,7 @@
 const cron = require("node-cron");
 const Task = require("../models/task");
 const User = require("../models/user");
-const client = require("twilio")("AC840ae498997c35882b117adedf4d5f43", "8f4205d3f9a1603737f7d66ae2179c2e");
+const client = require("twilio")(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 // const accountSid = "USb1f2fe21e2b501607bdc1b447676093b";
 // const authToken = "8f4205d3f9a1603737f7d66ae2179c2e";
@@ -12,7 +12,7 @@ const makeVoiceCall = async (phoneNumber) => {
     // const phoneNumberString = `+${phoneNumber}`;
     const call = await client.calls.create({
       to: "91" + phoneNumber,
-      from: "+17073883679",
+      from: process.env.TWILIO_PHONE_NUMBER,
       url: "http://demo.twilio.com/docs/voice.xml", // Replace with your TwiML URL
     });
 

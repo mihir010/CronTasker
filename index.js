@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require("express")
 const mongoose = require('mongoose');
 // const authMiddleWare = require('./middlewares/auth')
@@ -10,10 +11,10 @@ const userMiddleware = require('./middlewares/userValidation')
 const taskMiddleware = require('./middlewares/taskValidaton')
 const app = express();
 
-app.listen(5000)
+app.listen(process.env.PORT)
 
 
-mongoose.connect("mongodb+srv://kumarmihir02:mihir@gofirst.sj5svf3.mongodb.net/?retryWrites=true&w=majority").then(()=>{
+mongoose.connect(process.env.MONGODB_URI).then(()=>{
     console.log("connected to db")
 }).catch((err)=>{
     console.log("error while connecting to db: " + err)

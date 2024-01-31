@@ -11,7 +11,7 @@ const updateTaskPriority = async () => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, 'your-secret-key');
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;

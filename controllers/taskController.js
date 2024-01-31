@@ -88,7 +88,7 @@ const createTask = async (req, res) => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, "your-secret-key");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
@@ -130,7 +130,7 @@ const createSubTask = async (req, res) => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, "your-secret-key");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
@@ -173,7 +173,7 @@ const getAllUserTasks = async (req, res) => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, "your-secret-key");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
@@ -201,7 +201,7 @@ const getAllUserSubTasks = async (req, res) => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, "your-secret-key");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
@@ -248,7 +248,7 @@ const updateTask = async (req, res) => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, "your-secret-key");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
@@ -302,7 +302,7 @@ const updateSubTask = async (req, res) => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, "your-secret-key");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
@@ -361,7 +361,7 @@ const deleteTask = async (req, res) => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, "your-secret-key");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
@@ -412,7 +412,7 @@ const deleteSubTask = async (req, res) => {
     }
 
     // Verify the token to get user information
-    const decodedToken = jwt.verify(token, "your-secret-key");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;

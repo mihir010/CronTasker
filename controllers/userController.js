@@ -62,7 +62,7 @@ const userLogin = async (req, res) => {
     //   return res.status(401).json({ error: 'Unauthorized - Invalid password' });
     // }
 
-    const token = jwt.sign({ _id: user._id }, 'your-secret-key'); // Sign the token with user _id
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET); // Sign the token with user _id
     // console.log(req.cookies)
     res.cookie('jwt', token, { httpOnly: false, secure: false, sameSite: 'none' }).json({ success: true, token})
     // res.json({ token });
