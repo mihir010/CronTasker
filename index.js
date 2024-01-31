@@ -1,7 +1,6 @@
 require("dotenv").config()
 const express = require("express")
 const mongoose = require('mongoose');
-// const authMiddleWare = require('./middlewares/auth')
 const cookieParser = require("cookie-parser")
 const taskController = require('./controllers/taskController')
 const userController = require('./controllers/userController')
