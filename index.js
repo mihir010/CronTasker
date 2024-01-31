@@ -33,3 +33,4 @@ app.post('/api/subtasks/:subtask_id', taskMiddleware.deleteSubTaskValidationRule
 
 app.post('/api/users/signup', userMiddleware.createUserValidationRules ,userController.createUser);
 app.post('/api/users/login', userMiddleware.loginUserValidationRules ,userController.userLogin);
+app.post('/api/users/logout', userController.userLogout);

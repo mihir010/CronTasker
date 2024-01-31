@@ -72,8 +72,14 @@ const userLogin = async (req, res) => {
   }
 };
 
+const userLogout = (req, res) => {
+  res.clearCookie('jwt');
+  res.status(200).json({ success: true, message: 'Logout successful' });
+};
+
 module.exports = {
   createUser,
-  userLogin
+  userLogin,
+  userLogout
 };
 
