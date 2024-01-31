@@ -9,9 +9,9 @@ const client = require("twilio")("AC840ae498997c35882b117adedf4d5f43", "8f4205d3
 
 const makeVoiceCall = async (phoneNumber) => {
   try {
-    const phoneNumberString = `+${phoneNumber}`;
+    // const phoneNumberString = `+${phoneNumber}`;
     const call = await client.calls.create({
-      to: phoneNumberString,
+      to: "91" + phoneNumber,
       from: "+17073883679",
       url: "http://demo.twilio.com/docs/voice.xml", // Replace with your TwiML URL
     });

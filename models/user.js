@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  phone_number: Number,
+  phone_number: String,
   password: String,
   priority: { type: Number, enum: [0, 1, 2] },
 });
