@@ -175,9 +175,22 @@ const getAllUserTasks = async (req, res) => {
     // Verify the token to get user information
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
+    const { priority, sortByDueDate } = req.query;
+
+    let sortOptions = {};
+
+    if (priority) {
+      sortOptions.priority = priority === 'asc' ? 1 : -1;
+    }
+
+    if (sortByDueDate) {
+      sortOptions.due_date = sortByDueDate === 'asc' ? 1 : -1;
+    }
+
+
     // Extract the _id from the decoded token
     const user_id = decodedToken._id;
-    const tasks = await Task.find({ user_id: user_id, is_deleted: false });
+    const tasks = await Task.find({ user_id: user_id, is_deleted: false }).sort(sortOptions);
     // .populate("subTasks")
     // .populate("user_id");
     res.json(tasks);
