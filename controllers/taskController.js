@@ -36,10 +36,10 @@ const updateTaskStatus = async (task_id) => {
     } else {
       // Check if at least one subtask is finished
       const isAnySubTaskFinished = subtasks.some(
-        (subtask) => subtask.status === 1
+        (subtask) => subtask.status === 1 && subtask.is_deleted === false
       );
 
-      console.log(isAnySubTaskFinished);
+      // console.log(isAnySubTaskFinished);
 
       if (isAnySubTaskFinished) {
         await Task.updateOne(
@@ -54,7 +54,7 @@ const updateTaskStatus = async (task_id) => {
 
       // Check if every subtask is completed
       const isEverySubTaskCompleted = subtasks.every(
-        (subtask) => subtask.status === 1
+        (subtask) => subtask.status === 1 && subtask.is_deleted === false
       );
 
       if (isEverySubTaskCompleted) {
