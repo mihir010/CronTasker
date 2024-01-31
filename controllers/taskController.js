@@ -281,6 +281,7 @@ const deleteSubTask = async (req, res) => {
 
     // Perform soft deletion by setting is_deleted to true
     subTask.is_deleted = true;
+    
     await subTask.save();
 
     res.status(200).json({ message: 'Subtask soft deleted successfully' });
