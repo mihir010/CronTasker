@@ -68,7 +68,7 @@ const initiateVoiceCalls = async () => {
 };
 
 cron.schedule(
-  "0 0 * * *",
+  "08 06 * * *",
   () => {
     initiateVoiceCalls();
   },
